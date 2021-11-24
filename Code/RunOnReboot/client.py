@@ -5,7 +5,7 @@ import sys
 
 # While running on Kali, make INTERFACE as eth0
 # While running on Pi, make INTERFACE as wlan0
-INTERFACE = "eth0"
+INTERFACE = "wlan0"
 
 def getInfo():
             

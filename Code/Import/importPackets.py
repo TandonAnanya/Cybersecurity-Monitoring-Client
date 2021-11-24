@@ -2,13 +2,13 @@ import subprocess
 
 def install(package):
     try:
-        subprocess.call(['pip', 'install', package])
+        subprocess.call(['pip2', 'install', package])
     except:
         unsuccessfull.append(package)
 
 def upgrade(package):
     try:
-        subprocess.call(['pip', 'install', package, '--upgrade'])
+        subprocess.call(['pip2', 'install', package, '--upgrade'])
     except:
         unsuccessfull.append(package)
 

@@ -2,7 +2,7 @@
 
 import json
 
-def getManufaturerInfo(revision, filename='/home/pi/GSA/RunOnReboot/ModelToManufacturer.json'):
+def getManufaturerInfo(revision, filename='ModelToManufacturer.json'):
    
    try:
        f = open(filename, 'rb')

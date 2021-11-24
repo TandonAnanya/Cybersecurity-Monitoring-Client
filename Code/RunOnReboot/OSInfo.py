@@ -7,7 +7,7 @@ def getOSInfo(filename='/etc/os-release'):
    osInfo = {}
    
    try:
-       f = open(filename, 'rb')
+       f = open(filename, 'r')
    except OSError as err:
        print("OS error: {0}".format(err))
        return False

@@ -6,7 +6,7 @@ def getCPUInfo():
     cpuinfo = defaultdict(list)
     fname = '/proc/cpuinfo'
     try:
-        f = open(fname, 'rb')
+        f = open(fname, 'r')
     except OSError as err:
         print("OS error: {0}".format(err))
         return False

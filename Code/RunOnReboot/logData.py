@@ -87,50 +87,52 @@ import sys
 #     else:
 #         return createNewToken()    
 
-def writeData(digitalTwinInfo, counter):        
-
-    url = "34.94.115.157:4000"    
-    channelName = "common"
-    smartContractName = "dtc"
-    
-    # removed Token
-    # authToken = getToken()
-
-    # print("AuthToken: ",authToken)
-    t = time.time() 
-    timestamp = int(time.time()*1000.0)
-
-    headers = {
-    'Content-Type':'application/json',
-    'Accept':'application/json',
-    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTM5MDI5NjEsInVzZXJuYW1lIjoidXNlcjIiLCJvcmdOYW1lIjoiY2xpZW50TWFjaGluZSIsImlhdCI6MTYxMzg2Njk2MX0.6KGmGWtxNSlMkfR7wGIB5etd2lwSSiyfmtkAiiN-PFI'  
-    }
-
-    # headers['Authorization'] = 'Bearer ' + authToken
-
-    body = {
-    'peers': ['peer2.machine1.clientMachine.chainrider.io'],
-    'fcn': 'insertAsset',
-    'args': [str(timestamp), json.dumps(digitalTwinInfo, ensure_ascii=False)],
-    }
-
-    postURL = ''
-    postURL = "http://{}/channels/{}/chaincodes/{}".format(url, channelName, smartContractName)
-    response = requests.post(postURL, data=json.dumps(body), headers=headers)
-    # print("Timestamp: ",timestamp)
-    # print("Response: ",response)
-
-    date_time = datetime.datetime.fromtimestamp(t).strftime('%Y-%m-%d %H:%M:%S')
-    print("@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-")
-    print("Logging...")
-    print('Timestamp: ',timestamp)
-    print("Response: ", response)
-    print("@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-")
-    with open('writeLog', 'a') as logFile:
-        logFile.write("{}. Transaction Time Epoch [{}] - [{}]: -> Response: {}".format(counter, timestamp, date_time, str(response)))                
-        logFile.write('\n')
-
-    return response
+def writeData(digitalTwinInfo, counter):
+    digitalTwinInfo_json = json.dumps(digitalTwinInfo, ensure_ascii=False)
+    print(digitalTwinInfo_json)
+#     url = "34.94.115.157:4000"    
+#     channelName = "common"
+#     smartContractName = "dtc"
+#     
+#     # removed Token
+#     # authToken = getToken()
+# 
+#     # print("AuthToken: ",authToken)
+#     t = time.time() 
+#     timestamp = int(time.time()*1000.0)
+# 
+#     headers = {
+#     'Content-Type':'application/json',
+#     'Accept':'application/json',
+#     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTM5MDI5NjEsInVzZXJuYW1lIjoidXNlcjIiLCJvcmdOYW1lIjoiY2xpZW50TWFjaGluZSIsImlhdCI6MTYxMzg2Njk2MX0.6KGmGWtxNSlMkfR7wGIB5etd2lwSSiyfmtkAiiN-PFI'  
+#     }
+# 
+#     # headers['Authorization'] = 'Bearer ' + authToken
+# 
+#     body = {
+#     'peers': ['peer2.machine1.clientMachine.chainrider.io'],
+#     'fcn': 'insertAsset',
+#     'args': [str(timestamp), json.dumps(digitalTwinInfo, ensure_ascii=False)],
+#     }
+# 
+#     postURL = ''
+#     postURL = "http://{}/channels/{}/chaincodes/{}".format(url, channelName, smartContractName)
+#     response = requests.post(postURL, data=json.dumps(body), headers=headers)
+#     # print("Timestamp: ",timestamp)
+#     # print("Response: ",response)
+# 
+#     date_time = datetime.datetime.fromtimestamp(t).strftime('%Y-%m-%d %H:%M:%S')
+#     print("@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-")
+#     print("Logging...")
+#     print('Timestamp: ',timestamp)
+#     print("Response: ", response)
+#     print("@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-")
+#     with open('writeLog', 'a') as logFile:
+#         logFile.write("{}. Transaction Time Epoch [{}] - [{}]: -> Response: {}".format(counter, timestamp, date_time, str(response)))                
+#         logFile.write('\n')
+# 
+#     return response
+    return ''
 
 '''
 digitalTwinInfo =   {

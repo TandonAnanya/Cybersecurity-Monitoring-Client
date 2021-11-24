@@ -22,7 +22,7 @@ def get_unix_dns_ips():
                 dns_ip = columns[1]
                 try:
                     # Legal DNS IP Address
-                    dns_ips[columns[1]] = {'Binary_Format': socket.inet_aton(dns_ip)}                    
+                    dns_ips[columns[1]] = {'Binary_Format': socket.inet_aton(dns_ip).hex()}                    
                     reverse_lookup = socket.gethostbyaddr(dns_ip)
                     dns_ips[dns_ip]['Name'] = reverse_lookup[0]
                     dns_ips[dns_ip]['Alias List'] = reverse_lookup[1]
@@ -50,6 +50,6 @@ def getIPLayerAddressingParameters(INTERFACE):
 if __name__=="__main__":
     # While running on Kali, make INTERFACE as eth0
     # While running on Pi, make INTERFACE as wlan0
-    INTERFACE = "eth0"
+    INTERFACE = "wlan0"
     print(getIPLayerAddressingParameters(INTERFACE))
     

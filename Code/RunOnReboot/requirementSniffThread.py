@@ -113,18 +113,36 @@ class requirementSniffThread(threading.Thread):
          DNS_Data = {'QD':defaultdict(list), 'AN':defaultdict(list), 'NS':defaultdict(list)}
          if packet.haslayer(DNS):                        
             for x in range(packet[DNS].qdcount):
-               DNS_Data['QD']['qName'].append(packet[DNS].qd[x].qname)
+               try:
+                   DNS_Data['QD']['qName'].append(str(packet[DNS].qd[x].qname, 'utf-8'))
+               except:
+                   DNS_Data['QD']['qName'].append(packet[DNS].qd[x].qname)
                DNS_Data['QD']['qType'].append(packet[DNS].qd[x].qtype)
             for x in range(packet[DNS].ancount):
-               DNS_Data['AN']['rrName'].append(packet[DNS].an[x].rrname)
-               DNS_Data['AN']['rData'].append(packet[DNS].an[x].rdata)
+               try:
+                   DNS_Data['AN']['rrName'].append(str(packet[DNS].an[x].rrname,'utf-8'))
+               except:
+                   DNS_Data['AN']['rrName'].append(packet[DNS].an[x].rrname)
+               try:
+                   DNS_Data['AN']['rData'].append(str(packet[DNS].an[x].rdata,'utf-8'))
+               except:
+                   DNS_Data['AN']['rData'].append(packet[DNS].an[x].rdata)
                DNS_Data['AN']['ttl'].append(packet[DNS].an[x].ttl)
                DNS_Data['AN']['type'].append(packet[DNS].an[x].type)
             for x in range(packet[DNS].nscount):
-               DNS_Data['NS']['rrName'].append(packet[DNS].ns[x].rrname)
-               DNS_Data['NS']['rName'].append(packet[DNS].ns[x].rname)
+               try:
+                   DNS_Data['NS']['rrName'].append(str(packet[DNS].ns[x].rrname,'utf-8'))
+               except:
+                   DNS_Data['NS']['rrName'].append(packet[DNS].ns[x].rrname)
+               try:
+                   DNS_Data['NS']['rName'].append(str(packet[DNS].ns[x].rname,'utf-8'))
+               except:
+                   DNS_Data['NS']['rName'].append(packet[DNS].ns[x].rname)               
+               try:
+                   DNS_Data['NS']['mName'].append(str(packet[DNS].ns[x].mname,'utf-8'))
+               except:
+                   DNS_Data['NS']['mName'].append(packet[DNS].ns[x].mname)
                DNS_Data['NS']['type'].append(packet[DNS].ns[x].type)
-               DNS_Data['NS']['mName'].append(packet[DNS].ns[x].mname)
                DNS_Data['NS']['serial'].append(packet[DNS].ns[x].serial)
                DNS_Data['NS']['retry'].append(packet[DNS].ns[x].retry)
                DNS_Data['NS']['expire'].append(packet[DNS].ns[x].expire)         
@@ -253,6 +271,7 @@ class requirementSniffThread(threading.Thread):
                   try:                     
                      if TLSClientKeyExchange in TLS_info.msg[0]:
                         pubKey = TLS_info.msg[0][TLSClientKeyExchange].exchkeys.load
+                        print("Encoding Public Key")
                         TLS_Data['Public Key'] = bytes(pubKey).encode('hex')
                         # print("Public Key: ",pubKey)
                   except:
@@ -262,6 +281,7 @@ class requirementSniffThread(threading.Thread):
                         certificate = TLS(TLS_info[Raw])           
                         # print("Certificate: {}".format(bytes(certificate).encode('hex')))
                         # TLS_Data['Certificate'] = certificate
+                        print("Encoding Certificate")
                         TLS_Data['Certificate (HEX)'] = bytes(certificate).encode('hex')
                   except:
                      pass
@@ -272,13 +292,13 @@ class requirementSniffThread(threading.Thread):
                         # print("TLS Agreed Cipher: {}".format(agreedCipher))                
                   except:
                      pass
-                  TLS_bytes = bytes(TLS_info)                
-                  protocolRecord = int(TLS_bytes[0].encode('hex'),16)                                                
+                  TLS_bytes = bytes(TLS_info)
+                  protocolRecord = int(TLS_bytes[0:1].hex(),16)
                   if protocolRecord == 22:
-                     version =  int(TLS_bytes[1:2].encode('hex'),16),int(TLS_bytes[2:3].encode('hex'),16)
-                     message_len = int(TLS_bytes[3:5].encode('hex'),16)
-                     handshake_type = int(TLS_bytes[5].encode('hex'))
-                     handshake_length = int(TLS_bytes[6:9].encode('hex'),16)
+                     version =  int(TLS_bytes[1:2].hex(),16),int(TLS_bytes[2:3].hex(),16)
+                     message_len = int(TLS_bytes[3:5].hex(),16)
+                     handshake_type = int(TLS_bytes[5:6].hex(),16)
+                     handshake_length = int(TLS_bytes[6:9].hex(),16)
                      # print("Version = {}\nLength = {}\nHandshake Type = {}\nHandshake Length = {}".format(version, message_len, handshake_type, handshake_length))                          
                      TLS_Data['Version'] = version
                      TLS_Data['Length'] = message_len
@@ -290,7 +310,6 @@ class requirementSniffThread(threading.Thread):
                      data['timestamp'] = str(packet.time)
                      data['data'] = TLS_Data               
                      completeData.append(data)                  
-                     print("JSON: ",json.dumps(TLS_Data, ensure_ascii=False))
                      print('--------------------------------------------------------------')
             except Exception as e:
                print("Error: ",e)               
@@ -339,8 +358,8 @@ class requirementSniffThread(threading.Thread):
       self.digitalTwin['Dynamic']['DNS'] = self.dnsData
       self.digitalTwin['Dynamic']['ICMP'] = self.icmpData
       self.digitalTwin['Dynamic']['TLS'] = self.tlsData
-      self.digitalTwin['Dynamic']['Cookies'] = cookieHistory.getCookieHistory(INTERVAL)
-      self.digitalTwin['Dynamic']['Browser History'] = browserHistory.getBrowserHistory(INTERVAL)
+#       self.digitalTwin['Dynamic']['Cookies'] = cookieHistory.getCookieHistory(INTERVAL)
+#       self.digitalTwin['Dynamic']['Browser History'] = browserHistory.getBrowserHistory(INTERVAL)
       self.transactionCount+=1
       # print('--------------------------------------------------------------')
       # print('Transaction Count: ',self.transactionCount)
