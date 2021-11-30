@@ -18,6 +18,7 @@ import OSInfo
 import logData
 import cookieHistory
 import browserHistory
+import KernelProcesses
 from os import path
 
 # -------------------------------------------------------------------------------------------------------
@@ -358,6 +359,8 @@ class requirementSniffThread(threading.Thread):
       self.digitalTwin['Dynamic']['DNS'] = self.dnsData
       self.digitalTwin['Dynamic']['ICMP'] = self.icmpData
       self.digitalTwin['Dynamic']['TLS'] = self.tlsData
+      self.digitalTwin['Dynamic']['KernelProcesses']={}
+      self.digitalTwin['Dynamic']['KernelProcesses']['MetaData'] , self.digitalTwin['Dynamic']['KernelProcesses']['ProcessInfo']= KernelProcesses.get_KernelProcesses()
 #       self.digitalTwin['Dynamic']['Cookies'] = cookieHistory.getCookieHistory(INTERVAL)
 #       self.digitalTwin['Dynamic']['Browser History'] = browserHistory.getBrowserHistory(INTERVAL)
       self.transactionCount+=1
