@@ -18,13 +18,13 @@ def getOSInfo(filename='/etc/os-release'):
             if line:
                 label = line[0].strip()
                 value = line[1].strip()
-                osInfo[label] = value
+                osInfo[label] = value.replace("\"","")
        
-       osInfo["Name"] = os.uname()[0]
-       osInfo["Hostname"] = os.uname()[1]
-       osInfo["OS Release"] = os.uname()[2]
-       osInfo["OS Version"] = os.uname()[3]
-       osInfo["Architecture"] = os.uname()[4]
+       osInfo["Name"] = os.uname()[0].replace("\"","")
+       osInfo["Hostname"] = os.uname()[1].replace("\"","")
+       osInfo["OS Release"] = os.uname()[2].replace("\"","")
+       osInfo["OS Version"] = os.uname()[3].replace("\"","")
+       osInfo["Architecture"] = os.uname()[4].replace("\"","")
        
        return(osInfo)
 

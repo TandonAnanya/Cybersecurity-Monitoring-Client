@@ -111,7 +111,7 @@ class requirementSniffThread(threading.Thread):
       for packet in dnsPackets:   
          data = {}
          data['timestamp'] = str(packet.time)                   
-         DNS_Data = {'QD':defaultdict(list), 'AN':defaultdict(list), 'NS':defaultdict(list)}
+         DNS_Data = {'QD':{'qName': [], 'qType':[]}, 'AN':{'rrName': [], 'rData':[], 'ttl':[], 'type':[]}, 'NS': {'rrName': [], 'rName': [], 'mName': [], 'type': [], 'serial':[], 'retry':[], 'expire': []}}
          if packet.haslayer(DNS):                        
             for x in range(packet[DNS].qdcount):
                try:
@@ -330,7 +330,8 @@ class requirementSniffThread(threading.Thread):
          cpuInfo = CPUInfo.getCPUInfo()                  
          staticInformation["Serial Number"] = cpuInfo['Serial'][0]
          staticInformation["Hardware"] = cpuInfo['Hardware'][0]
-         staticInformation["Manufacturer"] = ManufatcurerInfo.getManufaturerInfo(cpuInfo["Revision"][0])
+         staticInformation["Manufacturer"], staticInformation["Owner"] = ManufatcurerInfo.getManufacturerInfo(cpuInfo["Revision"][0])
+         
       except Exception as e:
          pass
       try:
@@ -364,7 +365,7 @@ class requirementSniffThread(threading.Thread):
 #       self.digitalTwin['Dynamic']['Cookies'] = cookieHistory.getCookieHistory(INTERVAL)
 #       self.digitalTwin['Dynamic']['Browser History'] = browserHistory.getBrowserHistory(INTERVAL)
       self.transactionCount+=1
-      # print('--------------------------------------------------------------')
+      # print('-------------------------------staticInformation-------------------------------')
       # print('Transaction Count: ',self.transactionCount)
       # print('DigitalTwin: ',self.digitalTwin)
       # print('--------------------------------------------------------------')

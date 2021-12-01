@@ -2,23 +2,29 @@
 
 import json
 
-def getManufaturerInfo(revision, filename='ModelToManufacturer.json'):
+def getManufacturerInfo(revision, filename='ModelToManufacturer.json'):
    
    try:
        f = open(filename, 'rb')
+       g = open('Owner.txt','r')
+       owner = g.readline()
+       
    except OSError as err:
        print("OS error: {0}".format(err))
        return False
    
    with f:
-       return(json.load(f)[revision])
+       return (json.load(f)[revision]), owner
+
 
 if __name__ == "__main__":
+    #to run use python ManufatcurerInfo revision_num
+    # Ex: python ManufatcurerInfo 0014
     import sys
     revision = sys.argv[1]
-    manufature_details = getManufaturerInfo(revision)
-    if manufature_details:        
-        print(manufature_details)
+    manufacture_details = getManufacturerInfo(revision)
+    if manufacture_details:        
+        print(manufacture_details)
         sys.exit(0)
     else:
         print('Error')
