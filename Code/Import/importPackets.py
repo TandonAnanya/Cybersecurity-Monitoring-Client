@@ -11,7 +11,13 @@ def upgrade(package):
         subprocess.call(['pip2', 'install', package, '--upgrade'])
     except:
         unsuccessfull.append(package)
-
+        
+def installLinuxCommand():
+    try:
+        subprocess.call(['sudo apt-get install', 'sysstat'])
+    except:
+        print('sysstat already installed')
+        
 unsuccessfull = []
 packages = []
 
@@ -24,5 +30,5 @@ print(packages)
 for package in packages:
     install(package)
     upgrade(package)
-
+installLinuxCommand()
 print("\nUnsuccessfull: ",unsuccessfull)

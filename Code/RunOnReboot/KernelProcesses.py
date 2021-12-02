@@ -1,5 +1,4 @@
-import subprocess, sys, re
-from io import StringIO
+import subprocess, sys
 import pandas as pd
 import json
 def extractMetaInfo(metaInfo):

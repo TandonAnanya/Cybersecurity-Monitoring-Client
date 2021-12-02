@@ -140,7 +140,6 @@ def getBodyCreateJsonFormat(digitalTwinInfo):
     price=digitalTwinInfo['Static']['Manufacturer'].get('Price', '0')
     dynamicParams=str(digitalTwinInfo['Dynamic'])
     x = "{\"deviceName\":\""+deviceName+"\",\"owner\":\""+owner+"\",\"state\":\"active\",\"MACAddress\":\""+MACAddress+"\",\"serialNumber\":\""+serialNumber+"\",\"manufacturer\":\""+manufacturer+"\",\"hardware\":\""+hardware+"\",\"memorySize\":\""+memorySize+"\",\"osInfo\":\""+osInfo+"\",\"staticIP\":\"0.0.0.0\",\"price\":\""+price+"\",\"dynamicParams\":\""+dynamicParams+"\"}"
-    print(x)
     return x
 
 def getBodyUpdateJsonFormat(digitalTwinInfo):

@@ -28,6 +28,7 @@ INTERVAL = 0.5
 
 class requirementSniffThread(threading.Thread):
 
+
    def __init__(self, name, protocol, protocolfilter, interface):       
       threading.Thread.__init__(self)
       self._running = True
@@ -360,8 +361,16 @@ class requirementSniffThread(threading.Thread):
       self.digitalTwin['Dynamic']['DNS'] = self.dnsData
       self.digitalTwin['Dynamic']['ICMP'] = self.icmpData
       self.digitalTwin['Dynamic']['TLS'] = self.tlsData
-      self.digitalTwin['Dynamic']['KernelProcesses']={}
-      self.digitalTwin['Dynamic']['KernelProcesses']['MetaData'] , self.digitalTwin['Dynamic']['KernelProcesses']['ProcessInfo']= KernelProcesses.get_KernelProcesses()
+      self.digitalTwin['Dynamic']['Kernel Processes']={}
+      self.digitalTwin['Dynamic']['Kernel Processes']['MetaData'] , self.digitalTwin['Dynamic']['Kernel Processes']['ProcessInfo']= KernelProcesses.get_KernelProcesses()
+      try:
+          f=open('SystemActivity.json')
+          systemActivity_data=json.load(f)
+          f.close()
+      except:
+          systemActivity_data={}
+      self.digitalTwin['Dynamic']['System Activity Report']=systemActivity_data
+      
 #       self.digitalTwin['Dynamic']['Cookies'] = cookieHistory.getCookieHistory(INTERVAL)
 #       self.digitalTwin['Dynamic']['Browser History'] = browserHistory.getBrowserHistory(INTERVAL)
       self.transactionCount+=1

@@ -1,6 +1,7 @@
 from requirementSniffThread import requirementSniffThread
 import threading
 import sys
+import SystemActivityReport
 
 
 # While running on Kali, make INTERFACE as eth0
@@ -15,7 +16,9 @@ def getInfo():
     # TLSThread = requirementSniffThread("TLS-Thread","tls","tcp",INTERFACE)    
     # DNSThread = requirementSniffThread("DNS-Thread","dns","dns",INTERFACE)
     ScapyThread = requirementSniffThread("Scapy-Thread","Combined","",INTERFACE)
-    sniffThreads = [ScapyThread]
+    activity_report_thread= threading.Thread(target= SystemActivityReport.SystemReport)
+    
+    sniffThreads = [ScapyThread, activity_report_thread]
 
     # Start new Threads
     for thread in sniffThreads:
