@@ -12,23 +12,35 @@ def upgrade(package):
     except:
         unsuccessfull.append(package)
         
-def installLinuxCommand(package):
+def installPythonPackage(package):
     try:
-        subprocess.call(['sudo', 'apt-get', 'install', package])
+        subprocess.call(['sudo', 'apt-get', 'install', 'python3-'+package])
     except:
         print(package,' already installed')
+
+        
+def installLinuxCommand(linux_commands):
+    try:
+        subprocess.call(['sudo', 'apt-get', 'install',linux_commands])
+    except:
+        print(linux_commands,' already installed')
         
 unsuccessfull = []
 packages = []
-
-with open('importPackages.txt') as f:
+linux_commands=[]
+with open('importPythonPackages.txt') as f:
     for line in f:    
         packages.append(line)
 
-print(packages)
+with open('importLinuxCommands.txt') as f1:
+    for line in f1:    
+        linux_commands.append(line)
+print(linux_commands)
 
 for package in packages:
     install(package)
     upgrade(package)
-    installLinuxCommand(package)
+    installPythonPackage(package)
+for command in linux_commands:
+    installLinuxCommand(linux_commands)
 print("\nUnsuccessfull: ",unsuccessfull)
