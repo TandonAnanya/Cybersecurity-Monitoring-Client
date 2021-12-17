@@ -9,7 +9,7 @@ def needNewToken():
     # Interval in seconds    
     # interval = 30
 
-    interval = 10
+    interval = 30*60
 
     currentTime = time.time()
 
@@ -189,7 +189,7 @@ def updateDigitalTwin(digitalTwinInfo, ID, deviceName, counter):
         logFile.write("{}. Transaction Time Epoch [{}] - [{}]: -> Response: {}".format(counter, timestamp, date_time, str(response)))                
         logFile.write('\n')
 
-def getID(response):
+def getID(response, deviceName, owner):
     
     url = "35.235.92.92:4000"    
     channelName = "common"
@@ -220,7 +220,7 @@ def getID(response):
             devices= responseJson['response']['Record']
             for device in devices:
                 if device['Record']['deviceName']==deviceName:
-                    digitalTwinID = open('digitadigitalTwinInfolTwinID.txt', 'w+')
+                    digitalTwinID = open('digitalTwinID.txt', 'w+')
                     digitalTwinID.write(device['Record']['id'])
                     digitalTwinID.close()
                     return device['Record']['id'], True
@@ -239,7 +239,7 @@ def handleCreateAndUpdate(digitalTwinInfo, counter):
         deviceName=digitalTwinInfo["Static"].get('deviceName')
         postURLBody = getBodyCreateJsonFormat(digitalTwinInfo)
         response = createDigitalTwin(owner, postURLBody,deviceName, counter)
-        ID,flag = getID(response)
+        ID,flag = getID(response, deviceName, owner)
         if not flag:
             updateDigitalTwin(digitalTwinInfo, ID, deviceName, counter)
             
@@ -306,5 +306,6 @@ digitalTwinInfo =   {
 digitalTwinInfo =   {"name": "TrialAGain", "machine": "laptopWindows", "city": "Tempe", "age":100}
 
 if __name__=="__main__":
+    # dt = {'Static':{'MAC Address':{'Ethernet':'b8:27:eb:59:c4:b8','Wireless':'b8:27:eb:0c:91:ed'},'Serial Number':'000000006559c4b8','Hardware':'BCM2835','Manufacturer':{'Code':'a02082','Model':'3B','Revision':1.2,'RAM':'1GB','Manufacturer':'Sony UK'},'Owner':'Blockchain Research Lab','OS':{'Name':'Raspbian GNU/Linux','Type':'debian','Version Number':'11','Architecture':'armv7l','Version':'#1459 SMP Wed Oct 6 16:41:10 BST 2021','Release':'5.10.63-v7+'},'Hostname':'raspberrypi'},'Dynamic':{'IP Addressing':{'DeviceIP':'192.168.0.107','BroadcastIP':'192.168.0.255','Netmask':'255.255.255.0','GatewayIP':'192.168.0.1','DNS_Info':{'68.105.28.11':{'Binary_Format':'44691c0b','Name':'cdns1.cox.net','Alias List':[]},'68.105.29.11':{'Binary_Format':'44691d0b','Name':'cdns6.cox.net','Alias List':[]},'68.105.28.12':{'Binary_Format':'44691c0c','Name':'cdns2.cox.net','Alias List':[]}}},'timestamp':'2021-12-01 20:13:29'}}
+    # writeData(dt,0)
     pass
-#     writeData(digitalTwinInfo, 0)
