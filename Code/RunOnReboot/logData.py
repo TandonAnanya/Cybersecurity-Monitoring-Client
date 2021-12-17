@@ -130,8 +130,8 @@ def createDigitalTwin(owner,postBody,deviceName, counter):
 
 def getBodyCreateJsonFormat(digitalTwinInfo):
     owner= digitalTwinInfo['Static'].get('Owner','default')
-    deviceName=digitalTwinInfo['Static'].get('Hostname', 'RPI')
     MACAddress=str(digitalTwinInfo['Static'].get('MAC Address', '0'))
+    deviceName=digitalTwinInfo['Static'].get('Hostname', 'RPI-default')+'-'+MACAddress
     serialNumber=digitalTwinInfo['Static'].get('Serial Number', '0')
     manufacturer=digitalTwinInfo['Static']['Manufacturer'].get('Manufacturer', '0')
     hardware=digitalTwinInfo['Static'].get('Hardware', '0')
