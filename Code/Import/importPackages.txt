@@ -2,3 +2,6 @@ scapy
 cryptography
 netifaces
 MAC
+sysstat
+pandas
+

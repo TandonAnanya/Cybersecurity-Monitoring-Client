@@ -12,11 +12,11 @@ def upgrade(package):
     except:
         unsuccessfull.append(package)
         
-def installLinuxCommand():
+def installLinuxCommand(package):
     try:
-        subprocess.call(['sudo apt-get install', 'sysstat'])
+        subprocess.call(['sudo', 'apt-get', 'install', package])
     except:
-        print('sysstat already installed')
+        print(package,' already installed')
         
 unsuccessfull = []
 packages = []
@@ -30,5 +30,5 @@ print(packages)
 for package in packages:
     install(package)
     upgrade(package)
-installLinuxCommand()
+    installLinuxCommand(package)
 print("\nUnsuccessfull: ",unsuccessfull)
