@@ -29,11 +29,11 @@ def getSystemActivityReport(type_sar):
     command_output=subprocess.check_output(['sar', type_sar, '1', '10'])
     command_output=command_output.decode()
     command_output=command_output.split("\n")
-    header=[item for item in command_output[2].strip().split(' ') if item]
-    data=[item for item in command_output[13].strip().split(' ') if item]
+    data=[item for item in command_output[13].strip().split(' ') if item][1:]
+    header=[item for item in command_output[2].strip().split(' ') if item][-len(data):]
     dict_info={}
-    for i in range(1, len(data)):
-        dict_info[header[i+1]]=data[i]
+    for i in range(0, len(data)):
+        dict_info[header[i]]=data[i]
     return dict_info
 
 def SystemReport():
