@@ -125,7 +125,7 @@ class requirementSniffThread(threading.Thread):
                      pass
                DNS_Data['QD']['qType'].append(packet[DNS].qd[x].qtype)
             for x in range(packet[DNS].ancount):
-               try:
+               try:                  
                    DNS_Data['AN']['rrName'].append(str(packet[DNS].an[x].rrname,'utf-8'))
                except:   
                   try:
@@ -133,7 +133,10 @@ class requirementSniffThread(threading.Thread):
                   except:
                      pass
                try:
-                   DNS_Data['AN']['rData'].append(str(packet[DNS].an[x].rdata,'utf-8'))
+                  if type(packet[DNS].an[x].rdata)==list:                     
+                     DNS_Data['AN']['rData'].append(list(map(lambda x: x.decode(),packet[DNS].an[x].rdata)))
+                  else:
+                     DNS_Data['AN']['rData'].append(str(packet[DNS].an[x].rdata,'utf-8'))
                except:
                   try:
                      DNS_Data['AN']['rData'].append(packet[DNS].an[x].rdata)
@@ -485,4 +488,5 @@ class requirementSniffThread(threading.Thread):
                pass                  
  
 # -------------------------------------------------------------------------------------------------------
+   
    
