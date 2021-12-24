@@ -2,13 +2,13 @@ import subprocess
 
 def install(package):
     try:
-        subprocess.call(['pip2', 'install', package])
+        subprocess.call(['pip3', 'install', package])
     except:
         unsuccessfull.append(package)
 
 def upgrade(package):
     try:
-        subprocess.call(['pip2', 'install', package, '--upgrade'])
+        subprocess.call(['pip3', 'install', package, '--upgrade'])
     except:
         unsuccessfull.append(package)
         
@@ -38,8 +38,8 @@ with open('importLinuxCommands.txt') as f1:
 print(linux_commands)
 
 for package in packages:
-    install(package)
-    upgrade(package)
+   # install(package)
+    #upgrade(package)
     installPythonPackage(package)
 for command in linux_commands:
     installLinuxCommand(linux_commands)

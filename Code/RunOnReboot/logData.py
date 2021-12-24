@@ -43,7 +43,7 @@ def needNewToken():
 def accessNewToken():
     url = "35.235.92.92:4000"    
     channelName = "common"
-    smartContractName = "digitalTwin"
+    smartContractName = "digitalTwin2"
     postURL = 'http://{}/users/register'.format(url)
 
     headers = {
@@ -87,7 +87,7 @@ def createDigitalTwin(owner,postBody,deviceName, counter):
     
     url = "35.235.92.92:4000"    
     channelName = "common"
-    smartContractName = "digitalTwin"
+    smartContractName = "digitalTwin2"
     
     # check if newcreateDigitalTwin token needed
     authToken = getToken()
@@ -104,8 +104,8 @@ def createDigitalTwin(owner,postBody,deviceName, counter):
     #create DT
     
     body = {
-    "peers": ["peer0.machine1.manufacturers.org"],
-    "fcn": "createDT",
+    "peers": ["peer1.machine1.manufacturers.org"],
+    "fcn": "createDigitalTwin",
     "args": [postBody]
     }
     
@@ -131,7 +131,11 @@ def createDigitalTwin(owner,postBody,deviceName, counter):
 def getBodyCreateJsonFormat(digitalTwinInfo):
     owner= digitalTwinInfo['Static'].get('Owner','default')
     MACAddress=str(digitalTwinInfo['Static'].get('MAC Address', '0'))
-    deviceName=digitalTwinInfo['Static'].get('Hostname', 'RPI-default')+'-'+MACAddress
+    if MACAddress=='0':
+        deviceName=digitalTwinInfo['Static'].get('Hostname', 'RPI-default')+'-'+MACAddress
+    else:
+        EthernetMACAddress=digitalTwinInfo['Static']['MAC Address'].get('Ethernet','0')
+        deviceName=digitalTwinInfo['Static'].get('Hostname', 'RPI-default')+'-'+EthernetMACAddress
     serialNumber=digitalTwinInfo['Static'].get('Serial Number', '0')
     manufacturer=digitalTwinInfo['Static']['Manufacturer'].get('Manufacturer', '0')
     hardware=digitalTwinInfo['Static'].get('Hardware', '0')
@@ -139,7 +143,8 @@ def getBodyCreateJsonFormat(digitalTwinInfo):
     osInfo=digitalTwinInfo['Static']['OS'].get('Name', '0')
     price=digitalTwinInfo['Static']['Manufacturer'].get('Price', '0')
     dynamicParams=str(digitalTwinInfo['Dynamic'])
-    x = "{\"deviceName\":\""+deviceName+"\",\"owner\":\""+owner+"\",\"state\":\"active\",\"MACAddress\":\""+MACAddress+"\",\"serialNumber\":\""+serialNumber+"\",\"manufacturer\":\""+manufacturer+"\",\"hardware\":\""+hardware+"\",\"memorySize\":\""+memorySize+"\",\"osInfo\":\""+osInfo+"\",\"staticIP\":\"0.0.0.0\",\"price\":\""+price+"\",\"dynamicParams\":\""+dynamicParams+"\"}"
+    state=digitalTwinInfo['Dynamic'].get('State','unknown')
+    x = "{\"deviceName\":\""+deviceName+"\",\"owner\":\""+owner+"\",\"state\":\""+state+"\",\"MACAddress\":\""+MACAddress+"\",\"serialNumber\":\""+serialNumber+"\",\"manufacturer\":\""+manufacturer+"\",\"hardware\":\""+hardware+"\",\"memorySize\":\""+memorySize+"\",\"osInfo\":\""+osInfo+"\",\"staticIP\":\"0.0.0.0\",\"price\":\""+price+"\",\"dynamicParams\":\""+dynamicParams+"\"}"
     return x
 
 def getBodyUpdateJsonFormat(digitalTwinInfo):
@@ -152,7 +157,7 @@ def updateDigitalTwin(digitalTwinInfo, ID, deviceName, counter):
     
     url = "35.235.92.92:4000"    
     channelName = "common"
-    smartContractName = "digitalTwin"
+    smartContractName = "digitalTwin2"
     
     # check if new token needed
     authToken = getToken()                                                                                                                                                                                                                     
@@ -169,9 +174,10 @@ def updateDigitalTwin(digitalTwinInfo, ID, deviceName, counter):
     #update DT
     
     body = {
-    "peers": ["peer0.machine1.manufacturers.org"],
+    "peers": ["peer1.machine1.manufacturers.org"],
     "fcn": "updateAsset",
-    "args": [ID, owner , getBodyUpdateJsonFormat(digitalTwinInfo)]
+    # "args": [ID, owner , getBodyUpdateJsonFormat(digitalTwinInfo)]
+    "args": ["{\"id\":\""+ID+"\",\"owner\":\""+owner+"\",\"dynamicParams\":\""+getBodyUpdateJsonFormat(digitalTwinInfo)+"\"}"]
     }
     
     postURL = "http://{}/channels/{}/chaincodes/{}".format(url, channelName, smartContractName)
@@ -193,7 +199,7 @@ def getID(response, deviceName, owner):
     
     url = "35.235.92.92:4000"    
     channelName = "common"
-    smartContractName = "digitalTwin"
+    smartContractName = "digitalTwin2"
     headers = {
     'Content-Type':'application/json',
     'Accept':'application/json',
@@ -207,8 +213,8 @@ def getID(response, deviceName, owner):
         return ID, False
     if response.status_code==200 and response.json()['success']==True:
         body = {
-            "peers": ["peer0.machine1.manufacturers.org"],
-            "fcn": "getAssetbyOwner",
+            "peers": ["peer1.machine1.manufacturers.org"],
+            "fcn": "getDigitalTwinbyOwner",
             "args": ["{\"owner\":\""+owner+"\"}"]
             }
 
@@ -217,7 +223,7 @@ def getID(response, deviceName, owner):
         if response1.status_code==200:
             responseJson = response1.json()
             
-            devices= responseJson['response']['Record']
+            devices= responseJson['response']['Record']            
             for device in devices:
                 if device['Record']['deviceName']==deviceName:
                     digitalTwinID = open('digitalTwinID.txt', 'w+')
@@ -229,6 +235,7 @@ def getID(response, deviceName, owner):
 
 def handleCreateAndUpdate(digitalTwinInfo, counter):
     owner=digitalTwinInfo['Static'].get('Owner', 'default')
+    print(owner)
     try:
         deviceName=digitalTwinInfo["Static"].get('deviceName')
         digitalTwinID = open('digitalTwinID.txt', 'r')
@@ -255,7 +262,7 @@ def writeData(digitalTwinInfo, counter):
 # 
 #     url = "35.235.92.92:4000"    
 #     channelName = "common"
-#     smartContractName = "digitalTwin"
+#     smartContractName = "digitalTwin2"
 #     
 #     # removed Token
 #     authToken = accessNewToken()
@@ -306,6 +313,6 @@ digitalTwinInfo =   {
 digitalTwinInfo =   {"name": "TrialAGain", "machine": "laptopWindows", "city": "Tempe", "age":100}
 
 if __name__=="__main__":
-    # dt = {'Static':{'MAC Address':{'Ethernet':'b8:27:eb:59:c4:b8','Wireless':'b8:27:eb:0c:91:ed'},'Serial Number':'000000006559c4b8','Hardware':'BCM2835','Manufacturer':{'Code':'a02082','Model':'3B','Revision':1.2,'RAM':'1GB','Manufacturer':'Sony UK'},'Owner':'Blockchain Research Lab','OS':{'Name':'Raspbian GNU/Linux','Type':'debian','Version Number':'11','Architecture':'armv7l','Version':'#1459 SMP Wed Oct 6 16:41:10 BST 2021','Release':'5.10.63-v7+'},'Hostname':'raspberrypi'},'Dynamic':{'IP Addressing':{'DeviceIP':'192.168.0.107','BroadcastIP':'192.168.0.255','Netmask':'255.255.255.0','GatewayIP':'192.168.0.1','DNS_Info':{'68.105.28.11':{'Binary_Format':'44691c0b','Name':'cdns1.cox.net','Alias List':[]},'68.105.29.11':{'Binary_Format':'44691d0b','Name':'cdns6.cox.net','Alias List':[]},'68.105.28.12':{'Binary_Format':'44691c0c','Name':'cdns2.cox.net','Alias List':[]}}},'timestamp':'2021-12-01 20:13:29'}}
+    # dt = {'Static':{'MAC Address':{'Ethernet':'b8:27:eb:59:c4:b8','Wireless':'b8:27:eb:0c:91:ed'},'Serial Number':'000000006559c4b8','Hardware':'BCM2835','Manufacturer':{'Code':'a02082','Model':'3B','Revision':1.2,'RAM':'1GB','Manufacturer':'Sony UK'},'Owner':'Blockchain Research Lab','OS':{'Name':'Raspbian GNU/Linux','Type':'debian','Version Number':'11','Architecture':'armv7l','Version':'#1459 SMP Wed Oct 6 16:41:10 BST 2021','Release':'5.10.63-v7+'},'Hostname':'raspberrypi-trial2'},'Dynamic':{'IP Addressing':{'DeviceIP':'192.168.0.107','BroadcastIP':'192.168.0.255','Netmask':'255.255.255.0','GatewayIP':'192.168.0.1','DNS_Info':{'68.105.28.11':{'Binary_Format':'44691c0b','Name':'cdns1.cox.net','Alias List':[]},'68.105.29.11':{'Binary_Format':'44691d0b','Name':'cdns6.cox.net','Alias List':[]},'68.105.28.12':{'Binary_Format':'44691c0c','Name':'cdns2.cox.net','Alias List':[]}}},'timestamp':'2021-12-01 20:13:29'}}
     # writeData(dt,0)
     pass

@@ -19,6 +19,7 @@ import logData
 import cookieHistory
 import browserHistory
 import KernelProcesses
+from LabelDataRobot import getLabel
 from os import path
 
 # -------------------------------------------------------------------------------------------------------
@@ -118,36 +119,72 @@ class requirementSniffThread(threading.Thread):
                try:
                    DNS_Data['QD']['qName'].append(str(packet[DNS].qd[x].qname, 'utf-8'))
                except:
-                   DNS_Data['QD']['qName'].append(packet[DNS].qd[x].qname)
+                  try:
+                     DNS_Data['QD']['qName'].append(packet[DNS].qd[x].qname)
+                  except:
+                     pass
                DNS_Data['QD']['qType'].append(packet[DNS].qd[x].qtype)
             for x in range(packet[DNS].ancount):
                try:
                    DNS_Data['AN']['rrName'].append(str(packet[DNS].an[x].rrname,'utf-8'))
-               except:
-                   DNS_Data['AN']['rrName'].append(packet[DNS].an[x].rrname)
+               except:   
+                  try:
+                     DNS_Data['AN']['rrName'].append(packet[DNS].an[x].rrname)
+                  except:
+                     pass
                try:
                    DNS_Data['AN']['rData'].append(str(packet[DNS].an[x].rdata,'utf-8'))
                except:
-                   DNS_Data['AN']['rData'].append(packet[DNS].an[x].rdata)
-               DNS_Data['AN']['ttl'].append(packet[DNS].an[x].ttl)
-               DNS_Data['AN']['type'].append(packet[DNS].an[x].type)
+                  try:
+                     DNS_Data['AN']['rData'].append(packet[DNS].an[x].rdata)
+                  except:
+                     pass
+               try:
+                  DNS_Data['AN']['ttl'].append(packet[DNS].an[x].ttl)
+               except:
+                  pass
+               try:
+                  DNS_Data['AN']['type'].append(packet[DNS].an[x].type)
+               except:
+                  pass
             for x in range(packet[DNS].nscount):
                try:
                    DNS_Data['NS']['rrName'].append(str(packet[DNS].ns[x].rrname,'utf-8'))
                except:
-                   DNS_Data['NS']['rrName'].append(packet[DNS].ns[x].rrname)
+                  try:
+                     DNS_Data['NS']['rrName'].append(packet[DNS].ns[x].rrname)
+                  except:
+                     pass
                try:
                    DNS_Data['NS']['rName'].append(str(packet[DNS].ns[x].rname,'utf-8'))
                except:
-                   DNS_Data['NS']['rName'].append(packet[DNS].ns[x].rname)               
+                  try:
+                     DNS_Data['NS']['rName'].append(packet[DNS].ns[x].rname)               
+                  except:
+                     pass
                try:
                    DNS_Data['NS']['mName'].append(str(packet[DNS].ns[x].mname,'utf-8'))
                except:
-                   DNS_Data['NS']['mName'].append(packet[DNS].ns[x].mname)
-               DNS_Data['NS']['type'].append(packet[DNS].ns[x].type)
-               DNS_Data['NS']['serial'].append(packet[DNS].ns[x].serial)
-               DNS_Data['NS']['retry'].append(packet[DNS].ns[x].retry)
-               DNS_Data['NS']['expire'].append(packet[DNS].ns[x].expire)         
+                  try:
+                     DNS_Data['NS']['mName'].append(packet[DNS].ns[x].mname)
+                  except:
+                     pass
+               try:
+                  DNS_Data['NS']['type'].append(packet[DNS].ns[x].type)
+               except:
+                  pass
+               try:
+                  DNS_Data['NS']['serial'].append(packet[DNS].ns[x].serial)
+               except:
+                  pass
+               try:
+                  DNS_Data['NS']['retry'].append(packet[DNS].ns[x].retry)
+               except:
+                  pass
+               try:
+                  DNS_Data['NS']['expire'].append(packet[DNS].ns[x].expire)         
+               except:
+                  pass                                                            
          data['data'] = DNS_Data                            
          completeData.append(data)
       self.dnsData['DNS'] = completeData
@@ -297,7 +334,7 @@ class requirementSniffThread(threading.Thread):
                   TLS_bytes = bytes(TLS_info)
                   protocolRecord = int(TLS_bytes[0:1].hex(),16)
                   if protocolRecord == 22:
-                     version =  int(TLS_bytes[1:2].hex(),16),int(TLS_bytes[2:3].hex(),16)
+                     version = str(int(TLS_bytes[1:2].hex(),16))+'.'+str(int(TLS_bytes[2:3].hex(),16))
                      message_len = int(TLS_bytes[3:5].hex(),16)
                      handshake_type = int(TLS_bytes[5:6].hex(),16)
                      handshake_length = int(TLS_bytes[6:9].hex(),16)
@@ -355,7 +392,8 @@ class requirementSniffThread(threading.Thread):
       self.icmpCatchFile(self.fileNames['ICMP'])
       self.tlsCatchFile(self.fileNames['TLS'])
       self.digitalTwin['Static'] = self.getStaticInfo()
-      self.digitalTwin['Dynamic'] =  {}      
+      self.digitalTwin['Dynamic'] =  {}  
+      self.digitalTwin['Dynamic']['State'] = getLabel()
       self.digitalTwin['Dynamic']['IP Addressing'] = IPLayerAddressing.getIPLayerAddressingParameters(self.interface)    
       self.digitalTwin['Dynamic']['TCP'] = self.tcpData
       self.digitalTwin['Dynamic']['DNS'] = self.dnsData

@@ -17,8 +17,9 @@ def get_unix_dns_ips():
 
     with open('/etc/resolv.conf') as filePointer:
         for line in filePointer:
-            columns = line.split()            
-            if columns[0]=="nameserver":
+            
+            columns = line.split()
+            if columns and columns[0]=="nameserver":
                 dns_ip = columns[1]
                 try:
                     # Legal DNS IP Address
