@@ -143,8 +143,8 @@ def getBodyCreateJsonFormat(digitalTwinInfo):
     osInfo=digitalTwinInfo['Static']['OS'].get('Name', '0')
     price=digitalTwinInfo['Static']['Manufacturer'].get('Price', '0')
     dynamicParams=str(digitalTwinInfo['Dynamic'])
-    state=digitalTwinInfo['Dynamic'].get('State','unknown')
-    x = "{\"deviceName\":\""+deviceName+"\",\"owner\":\""+owner+"\",\"state\":\""+state+"\",\"MACAddress\":\""+MACAddress+"\",\"serialNumber\":\""+serialNumber+"\",\"manufacturer\":\""+manufacturer+"\",\"hardware\":\""+hardware+"\",\"memorySize\":\""+memorySize+"\",\"osInfo\":\""+osInfo+"\",\"staticIP\":\"0.0.0.0\",\"price\":\""+price+"\",\"dynamicParams\":\""+dynamicParams+"\"}"
+    # state=digitalTwinInfo['Dynamic'].get('State','unknown')
+    x = "{\"deviceName\":\""+deviceName+"\",\"owner\":\""+owner+"\",\"state\":\""+'active'+"\",\"MACAddress\":\""+MACAddress+"\",\"serialNumber\":\""+serialNumber+"\",\"manufacturer\":\""+manufacturer+"\",\"hardware\":\""+hardware+"\",\"memorySize\":\""+memorySize+"\",\"osInfo\":\""+osInfo+"\",\"staticIP\":\"0.0.0.0\",\"price\":\""+price+"\",\"dynamicParams\":\""+dynamicParams+"\"}"
     return x
 
 def getBodyUpdateJsonFormat(digitalTwinInfo):

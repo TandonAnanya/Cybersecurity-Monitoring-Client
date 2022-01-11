@@ -19,6 +19,7 @@ import logData
 import cookieHistory
 import browserHistory
 import KernelProcesses
+import GPIOMotorData
 from LabelDataRobot import getLabel
 from os import path
 
@@ -404,6 +405,7 @@ class requirementSniffThread(threading.Thread):
       self.digitalTwin['Dynamic']['TLS'] = self.tlsData
       self.digitalTwin['Dynamic']['Kernel Processes']={}
       self.digitalTwin['Dynamic']['Kernel Processes']['MetaData'] , self.digitalTwin['Dynamic']['Kernel Processes']['ProcessInfo']= KernelProcesses.get_KernelProcesses()
+      
       try:
           f=open('SystemActivity.json')
           systemActivity_data=json.load(f)
@@ -411,7 +413,7 @@ class requirementSniffThread(threading.Thread):
       except:
           systemActivity_data={}
       self.digitalTwin['Dynamic']['System Activity Report']=systemActivity_data
-      
+      self.digitalTwin['Dynamic']['GPIO Pin Output']=GPIOMotorData.getGPIOInfo()
 #       self.digitalTwin['Dynamic']['Cookies'] = cookieHistory.getCookieHistory(INTERVAL)
 #       self.digitalTwin['Dynamic']['Browser History'] = browserHistory.getBrowserHistory(INTERVAL)
       self.transactionCount+=1
