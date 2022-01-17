@@ -423,7 +423,7 @@ class requirementSniffThread(threading.Thread):
       # print('--------------------------------------------------------------')
       writeLog = logData.writeData(self.digitalTwin, self.transactionCount)
       
-      
+      logData.logDataFile(self.digitalTwin)
       
    def dnsPacketpanalyzer(self, packet):
       self.writeFile(self.dnsFilename, packet, 'DNS')

@@ -9,7 +9,7 @@ def needNewToken():
     # Interval in seconds    
     # interval = 30
 
-    interval = 30*60
+    interval = 15*60
 
     currentTime = time.time()
 
@@ -146,6 +146,13 @@ def getBodyCreateJsonFormat(digitalTwinInfo):
     # state=digitalTwinInfo['Dynamic'].get('State','unknown')
     x = "{\"deviceName\":\""+deviceName+"\",\"owner\":\""+owner+"\",\"state\":\""+'active'+"\",\"MACAddress\":\""+MACAddress+"\",\"serialNumber\":\""+serialNumber+"\",\"manufacturer\":\""+manufacturer+"\",\"hardware\":\""+hardware+"\",\"memorySize\":\""+memorySize+"\",\"osInfo\":\""+osInfo+"\",\"staticIP\":\"0.0.0.0\",\"price\":\""+price+"\",\"dynamicParams\":\""+dynamicParams+"\"}"
     return x
+
+def logDataFile(digitalTwinInfo):
+
+    file_logData=open('Dynamic_Data.json', 'a+')
+    json.dump(digitalTwinInfo['Dynamic'],file_logData)
+    file_logData.write('\n')
+    file_logData.close()
 
 def getBodyUpdateJsonFormat(digitalTwinInfo):
     dynamicParams=str(digitalTwinInfo['Dynamic'])
