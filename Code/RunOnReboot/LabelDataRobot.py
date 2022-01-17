@@ -19,7 +19,9 @@ def checkEncoder():
     GPIO.setup(sense_pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
     
     GPIO.add_event_detect(sense_pin, GPIO.BOTH,callback=lambda x: Interrupt(Counter),  bouncetime= 2000)
+
     sleep(1)
+    GPIO.cleanup()
     return "Moving" if Counter[0]>0 else "Not Moving"
 
 def getLabel():
